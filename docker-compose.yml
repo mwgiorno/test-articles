@@ -1,0 +1,62 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: ${USER}
+        uid: ${UID}
+      context: docker/php-fpm/
+      dockerfile: Dockerfile
+    image: wnews
+    container_name: wnews-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - wnews
+
+  db:
+    image: mysql
+    container_name: wnews-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    networks:
+      - wnews
+
+  nginx:
+    image: nginx:alpine
+    container_name: wnews-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d/
+    networks:
+      - wnews
+
+  node:
+    image: node:alpine
+    container_name: wnews-node
+    restart: unless-stopped
+    working_dir: /var/www/
+    tty: true
+    ports:
+      - 5173:5173
+    volumes:
+      - ./:/var/www
+    networks:
+      - wnews
+        
+networks:
+  wnews:
+    driver: bridge
