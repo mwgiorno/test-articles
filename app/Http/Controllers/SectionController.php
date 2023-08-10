@@ -14,4 +14,22 @@ class SectionController extends Controller
             'sections' => Section::all()
         ]);
     }
+
+    public function create()
+    {
+        return Inertia::render('Section/Create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:sections,name'
+        ]);
+
+        Section::create([
+            'name' => $request->name
+        ]);
+
+        return to_route('sections');
+    }
 }

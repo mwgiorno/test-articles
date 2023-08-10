@@ -14,7 +14,7 @@ const props = defineProps({
         <template #header>
             <div class="flex items-center justify-between">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">Sections</h2>
-                <Link class="border py-1 px-3 rounded hover:text-indigo-500 font-medium">
+                <Link :href="route('sections.create')" class="border py-1 px-4 rounded hover:text-indigo-500 font-medium">
                     New Section
                 </Link>
             </div>
