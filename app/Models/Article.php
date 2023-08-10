@@ -23,4 +23,14 @@ class Article extends Model
         'body',
         'published'
     ];
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function sections()
+    {
+        return $this->belongsToMany(Section::class);
+    }
 }

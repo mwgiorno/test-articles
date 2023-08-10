@@ -15,4 +15,9 @@ class Section extends Model
      * @var array
      */
     protected $fillable = ['name'];
+
+    public function articles()
+    {
+        return $this->belongsToMany(Article::class);
+    }
 }
