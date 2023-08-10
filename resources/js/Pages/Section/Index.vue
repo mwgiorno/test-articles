@@ -59,7 +59,7 @@ const props = defineProps({
                                                 </td>
 
                                                 <td width="5%" class="px-6 py-4 whitespace-no-wrap text-sm text-center leading-5 font-medium">
-                                                    <Link class="hover:text-indigo-500">
+                                                    <Link :href="route('sections.update', section.id)" class="hover:text-indigo-500">
                                                         Edit
                                                     </Link>
                                                 </td>

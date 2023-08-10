@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/sections', [SectionController::class, 'index'])->name('sections');
     Route::get('/sections/create', [SectionController::class, 'create'])->name('sections.create');
     Route::post('/sections', [SectionController::class, 'store'])->name('sections.store');
+    Route::get('/sections/{section}', [SectionController::class, 'edit'])->name('sections.edit');
+    Route::patch('/sections/{section}', [SectionController::class, 'update'])->name('sections.update');
 });
 
 require __DIR__.'/auth.php';
