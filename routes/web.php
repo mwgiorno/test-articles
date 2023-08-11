@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SectionController;
 use Illuminate\Foundation\Application;
@@ -40,6 +41,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/sections', [SectionController::class, 'store'])->name('sections.store');
     Route::get('/sections/{section}', [SectionController::class, 'edit'])->name('sections.edit');
     Route::patch('/sections/{section}', [SectionController::class, 'update'])->name('sections.update');
+
+    Route::get('/articles', [ArticleController::class, 'index'])->name('articles');
+    Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
+    Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
+    Route::get('/articles/{article}', [ArticleController::class, 'edit'])->name('articles.edit');
+    Route::patch('/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
 });
 
 require __DIR__.'/auth.php';

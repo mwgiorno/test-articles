@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,6 +25,15 @@ class Article extends Model
         'published'
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'published' => 'boolean',
+    ];
+
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
@@ -32,5 +42,13 @@ class Article extends Model
     public function sections()
     {
         return $this->belongsToMany(Section::class);
+    }
+
+    /**
+     * Scope a query to only include published articles.
+     */
+    public function scopePublished(Builder $query): void
+    {
+        $query->where('published', true);
     }
 }
