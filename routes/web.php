@@ -3,6 +3,7 @@
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -47,6 +48,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
     Route::get('/articles/{article}', [ArticleController::class, 'edit'])->name('articles.edit');
     Route::patch('/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
+
+    Route::get('/users', [UserController::class, 'index'])->name('users');
 });
 
 require __DIR__.'/auth.php';
