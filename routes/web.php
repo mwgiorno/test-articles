@@ -53,6 +53,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])
         ->name('users')
         ->can('view', User::class);
+    Route::get('/users/{user}', [UserController::class, 'edit'])
+        ->name('users.edit')
+        ->can('edit', User::class);
+    Route::patch('/users/{user}', [UserController::class, 'update'])
+        ->name('users.update')
+        ->can('update', User::class);
 });
 
 require __DIR__.'/auth.php';

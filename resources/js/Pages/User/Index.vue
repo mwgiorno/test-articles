@@ -100,7 +100,7 @@ const sort = () => {
                                                 </td>
 
                                                 <td width="5%" class="px-6 py-4 whitespace-no-wrap text-sm text-center leading-5 font-medium">
-                                                    <Link href="#" class="hover:text-indigo-500 text-gray-700">
+                                                    <Link :href="route('users.edit', user.id)" class="hover:text-indigo-500 text-gray-700">
                                                         Edit
                                                     </Link>
                                                 </td>

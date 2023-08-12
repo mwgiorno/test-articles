@@ -23,4 +23,37 @@ class UserController extends Controller
             'users' => $users
         ]);
     }
+
+    public function edit(User $user)
+    {
+        $user->admin = $user->isAn('admin');
+
+        return Inertia::render('User/Edit', [
+            'user' => $user
+        ]);
+    }
+
+    public function update(User $user, Request $request)
+    {
+        $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255'
+            ]
+        ]);
+
+        $user->fill([
+            'name' => $request->name,
+            'active' => $request->boolean('active')
+        ]);
+
+        $user->save();
+
+        $request->boolean('admin') 
+            ? $user->assign('admin') 
+            : $user->retract('admin');
+
+        return to_route('users');
+    }
 }
