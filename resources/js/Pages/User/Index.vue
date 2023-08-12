@@ -1,10 +1,44 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, useForm, useRemember } from '@inertiajs/vue3';
 
 const props = defineProps({
     users: Object
 });
+
+class SortableState {
+    static states = [null, 'asc', 'desc'];
+
+    constructor() {
+        this.index = 0;
+    }
+
+    next () {
+        this.index++;
+        if (this.index >= SortableState.states.length) {
+            this.index = 0;
+        }
+    };
+
+    get value() {
+        return SortableState.states[this.index];
+    }
+};
+
+const sortingForm = useForm({
+    id: new SortableState()
+});
+
+const sort = () => {
+    sortingForm.id.next();
+    sortingForm.transform((data) => ({
+        ...data,
+        id: data.id.value,
+    }))
+    sortingForm.get('/users', {
+        preserveState: true
+    });
+}
 </script>
 
 <template>
@@ -23,8 +57,11 @@ const props = defineProps({
                                 <table class="min-w-full">
                                     <thead>
                                         <tr class="border-y border-gray-200 bg-gray-50">
-                                            <th width="5%" scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                                ID
+                                            <th width="5%" @click="sort" scope="col" class="hover:text-indigo-500 cursor-pointer flex items-center gap-x-2 px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                                ID 
+                                                <span v-if="sortingForm.id.value === 'asc'"><i class="fa-solid fa-sort-up"></i></span>
+                                                <span v-else-if="sortingForm.id.value === 'desc'"><i class="fa-solid fa-sort-down"></i></span>
+                                                <span v-else><i class="fa-solid fa-sort"></i></span>
                                             </th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                                 Name
@@ -63,7 +100,7 @@ const props = defineProps({
                                                 </td>
 
                                                 <td width="5%" class="px-6 py-4 whitespace-no-wrap text-sm text-center leading-5 font-medium">
-                                                    <Link class="hover:text-indigo-500 text-gray-700">
+                                                    <Link href="#" class="hover:text-indigo-500 text-gray-700">
                                                         Edit
                                                     </Link>
                                                 </td>

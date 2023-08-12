@@ -1,5 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { DateTime } from "luxon";
 import { Head, Link } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -21,7 +22,7 @@ const props = defineProps({
         </template>
 
         <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="mx-auto mx-12 sm:px-6 lg:px-8">
                     <div class="flex flex-col">
                         <div class="-my-2 py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
                             <div class="align-middle inline-block min-w-full shadow-sm rounded-sm border-b border-gray-200 bg-white">
@@ -31,7 +32,7 @@ const props = defineProps({
                                             <th width="5%" scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                                 ID
                                             </th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                            <th width="35%" scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                                 Headline
                                             </th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -58,13 +59,9 @@ const props = defineProps({
                                                     <div class="text-sm leading-5 text-gray-700">{{ article.id }}</div>
                                                 </td>
 
-                                                <td class="px-6 py-4 whitespace-no-wrap">
-                                                    <div class="flex items-center gap-x-2">
-                                                        <div class="h-10 w-12">
-                                                            <img :src="article.thumbnail_url" class="object-cover h-10 w-12 rounded">
-                                                        </div>
-                                                        <div class="text-sm leading-5 text-gray-700">{{ article.headline }}</div>
-                                                    </div>
+                                                <td class="px-6 py-4 flex items-center gap-x-2">
+                                                    <img :src="article.thumbnail_url" class="shrink-0 object-cover h-10 w-12 rounded">
+                                                    <div class="text-sm leading-5 text-gray-700">{{ article.headline }}</div>
                                                 </td>
 
                                                 <td class="px-6 py-4 whitespace-no-wrap">
@@ -76,11 +73,11 @@ const props = defineProps({
                                                 </td>
 
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    <div class="text-sm leading-5 text-gray-700">{{ article.created_at }}</div>
+                                                    <div class="text-sm leading-5 text-gray-700">{{ DateTime.fromISO(article.created_at).toFormat('dd.LL.y HH:mm') }}</div>
                                                 </td>
 
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    <div class="text-sm leading-5 text-gray-700">{{ article.updated_at }}</div>
+                                                    <div class="text-sm leading-5 text-gray-700">{{ DateTime.fromISO(article.updated_at).toFormat('dd.LL.y HH:mm') }}</div>
                                                 </td>
 
                                                 <td class="px-6 py-4 whitespace-no-wrap text-center">
