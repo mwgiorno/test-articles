@@ -55,7 +55,10 @@ const props = defineProps({
                                                 </td>
 
                                                 <td class="px-6 py-4 whitespace-no-wrap text-center">
-                                                    <div class="text-sm leading-5 text-gray-900">Active</div>
+                                                    <div class="text-xs leading-5 text-gray-700 font-medium">
+                                                        <span v-if="section.active" class="bg-green-100 px-2 py-1 rounded-lg text-green-500">active</span>
+                                                        <span v-else class="bg-red-100 px-2 py-1 rounded-lg text-red-500">inactive</span>
+                                                    </div>
                                                 </td>
 
                                                 <td width="5%" class="px-6 py-4 whitespace-no-wrap text-sm text-center leading-5 font-medium">

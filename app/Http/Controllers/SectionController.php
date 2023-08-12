@@ -53,7 +53,8 @@ class SectionController extends Controller
         ]);
 
         $section->fill([
-            'name' => $request->name
+            'name' => $request->name,
+            'active' => $request->boolean('active')
         ]);
 
         $section->save();

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,16 @@ class Section extends Model
      *
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'active'];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'active' => 'boolean'
+    ];
 
     /**
      * Interact with the user's first name.
@@ -31,5 +41,13 @@ class Section extends Model
     public function articles()
     {
         return $this->belongsToMany(Article::class);
+    }
+
+    /**
+     * Scope a query to only include active sections.
+     */
+    public function scopePublished(Builder $query): void
+    {
+        $query->where('active', true);
     }
 }
