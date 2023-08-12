@@ -4,6 +4,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,11 +29,11 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
 
-Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -49,7 +50,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/articles/{article}', [ArticleController::class, 'edit'])->name('articles.edit');
     Route::patch('/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
 
-    Route::get('/users', [UserController::class, 'index'])->name('users');
+    Route::get('/users', [UserController::class, 'index'])
+        ->name('users')
+        ->can('view', User::class);
 });
 
 require __DIR__.'/auth.php';
