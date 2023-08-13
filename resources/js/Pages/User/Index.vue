@@ -1,40 +1,27 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, useForm, useRemember } from '@inertiajs/vue3';
+import SortableTableHeader from '@/Components/SortableTableHeader.vue';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     users: Object
 });
 
-class SortableState {
-    static states = [null, 'asc', 'desc'];
-
-    constructor() {
-        this.index = 0;
-    }
-
-    next () {
-        this.index++;
-        if (this.index >= SortableState.states.length) {
-            this.index = 0;
-        }
-    };
-
-    get value() {
-        return SortableState.states[this.index];
-    }
-};
-
 const sortingForm = useForm({
-    id: new SortableState()
+    id: null,
+    name: null,
+    email: null
 });
 
-const sort = () => {
-    sortingForm.id.next();
-    sortingForm.transform((data) => ({
-        ...data,
-        id: data.id.value,
-    }))
+const sort = (column, value) => {
+    sortingForm.defaults({
+    id: null,
+    name: null,
+    email: null
+})
+    sortingForm.reset();
+    sortingForm[column] = value;
+
     sortingForm.get('/users', {
         preserveState: true
     });
@@ -57,18 +44,15 @@ const sort = () => {
                                 <table class="min-w-full">
                                     <thead>
                                         <tr class="border-y border-gray-200 bg-gray-50">
-                                            <th width="5%" @click="sort" scope="col" class="hover:text-indigo-500 cursor-pointer flex items-center gap-x-2 px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                                ID 
-                                                <span v-if="sortingForm.id.value === 'asc'"><i class="fa-solid fa-sort-up"></i></span>
-                                                <span v-else-if="sortingForm.id.value === 'desc'"><i class="fa-solid fa-sort-down"></i></span>
-                                                <span v-else><i class="fa-solid fa-sort"></i></span>
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                            <SortableTableHeader width="5%" :value="sortingForm.id" column-name="id" @change-state="sort">
+                                                ID
+                                            </SortableTableHeader>
+                                            <SortableTableHeader column-name="name" @change-state="sort">
                                                 Name
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                            </SortableTableHeader>
+                                            <SortableTableHeader column-name="email" @change-state="sort">
                                                 Email
-                                            </th>
+                                            </SortableTableHeader>
                                             <th scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider text-center">
                                                 Status
                                             </th>

@@ -5,16 +5,45 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class UserController extends Controller
 {
     public function index(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'id' => [
+                'nullable',
+                Rule::in(['asc', 'desc']),
+            ],
+            'name' => [
+                'nullable',
+                Rule::in(['asc', 'desc']),
+            ],
+            'email' => [
+                'nullable',
+                Rule::in(['asc', 'desc']),
+            ]
+        ]);
+
+        $sortables = $validator->validated();
+
         $users = User::when(
-                $request->id,
-                function (Builder $query, string $id) {
-                    $query->orderBy('id', $id);
+                isset($sortables['id']),
+                function (Builder $query) use($sortables) {
+                    $query->orderBy('id', $sortables['id']);
+                }
+            )->when(
+                isset($sortables['name']),
+                function (Builder $query) use($sortables) {
+                    $query->orderBy('name', $sortables['name']);
+                }
+            )->when(
+                isset($sortables['email']),
+                function (Builder $query) use($sortables) {
+                    $query->orderBy('email', $sortables['email']);
                 }
             )->get()
             ->except($request->user()->id);

@@ -1,11 +1,32 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import SortableTableHeader from '@/Components/SortableTableHeader.vue';
 import { DateTime } from "luxon";
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     articles: Object
 });
+
+const sortingForm = useForm({
+    id: null,
+    created: null,
+    updated: null
+});
+
+const sort = (column, value) => {
+    sortingForm.defaults({
+    id: null,
+    created: null,
+    updated: null
+})
+    sortingForm.reset();
+    sortingForm[column] = value;
+
+    sortingForm.get('/articles', {
+        preserveState: true
+    });
+}
 </script>
 
 <template>
@@ -29,21 +50,21 @@ const props = defineProps({
                                 <table class="min-w-full">
                                     <thead>
                                         <tr class="border-y border-gray-200 bg-gray-50">
-                                            <th width="5%" scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                            <SortableTableHeader width="5%" column-name="id" @change-state="sort">
                                                 ID
-                                            </th>
+                                            </SortableTableHeader>
                                             <th width="35%" scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                                 Headline
                                             </th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                                 Sections
                                             </th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                            <SortableTableHeader column-name="created" @change-state="sort">
                                                 Created
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                            </SortableTableHeader>
+                                            <SortableTableHeader column-name="updated" @change-state="sort">
                                                 Updated
-                                            </th>
+                                            </SortableTableHeader>
                                             <th scope="col" class="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider text-center">
                                                 Status
                                             </th>

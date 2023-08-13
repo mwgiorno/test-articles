@@ -6,16 +6,51 @@ use App\Http\Requests\Article\CreateRequest;
 use App\Http\Requests\Article\UpdateRequest;
 use App\Models\Article;
 use App\Models\Section;
+use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class ArticleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::with('sections')->get();
+        $validator = Validator::make($request->all(), [
+            'id' => [
+                'nullable',
+                Rule::in(['asc', 'desc']),
+            ],
+            'created' => [
+                'nullable',
+                Rule::in(['asc', 'desc']),
+            ],
+            'updated' => [
+                'nullable',
+                Rule::in(['asc', 'desc']),
+            ]
+        ]);
+
+        $sortables = $validator->validated();
+
+        $articles = Article::with('sections')
+            ->when(
+                isset($sortables['id']),
+                function (Builder $query) use($sortables) {
+                    $query->orderBy('id', $sortables['id']);
+                }
+            )->when(
+                isset($sortables['created']),
+                function (Builder $query) use($sortables) {
+                    $query->orderBy('created_at', $sortables['created']);
+                }
+            )->when(
+                isset($sortables['updated']),
+                function (Builder $query) use($sortables) {
+                    $query->orderBy('updated_at', $sortables['updated']);
+                }
+            )->get();
 
         return Inertia::render('Article/Index', [
             'articles' => $articles
