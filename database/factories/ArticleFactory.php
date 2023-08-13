@@ -24,7 +24,7 @@ class ArticleFactory extends Factory
             'headline' => fake()->sentence(),
             'thumbnail_path' => $image,
             'thumbnail_url' => $image,
-            'slug' => fake()->slug(),
+            'slug' => fake()->unique()->slug(),
             'body' => fake()->text()
         ];
     }

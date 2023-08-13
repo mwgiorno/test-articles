@@ -30,7 +30,8 @@ class UserController extends Controller
 
         $sortables = $validator->validated();
 
-        $users = User::when(
+        $users = User::whereIsNot('superadmin')
+            ->when(
                 isset($sortables['id']),
                 function (Builder $query) use($sortables) {
                     $query->orderBy('id', $sortables['id']);
