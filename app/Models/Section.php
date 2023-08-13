@@ -46,7 +46,7 @@ class Section extends Model
     /**
      * Scope a query to only include active sections.
      */
-    public function scopePublished(Builder $query): void
+    public function scopeActive(Builder $query): void
     {
         $query->where('active', true);
     }
