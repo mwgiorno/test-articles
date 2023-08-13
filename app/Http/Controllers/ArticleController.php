@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
@@ -73,10 +74,12 @@ class ArticleController extends Controller
         $thumbnailUrl = Storage::disk('thumbnails')
             ->url($thumbnailPath);
 
+        $slug = $request->slug ?? Str::slug("{$request->headline} " . Str::random(16), '-');
+
         $article = Article::create([
             'author_id' => $request->user()->id,
             'headline' => $request->headline,
-            'slug' => $request->slug,
+            'slug' => $slug,
             'body' => $request->body,
             'thumbnail_path' => $thumbnailPath,
             'thumbnail_url' => $thumbnailUrl,
